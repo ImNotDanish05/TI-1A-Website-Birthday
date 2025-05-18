@@ -41,10 +41,7 @@
     <section id="backgroundultah" class="bg-blue-900 text-center py-12 px-10">
         <h1 id="namaultah" class="text-4xl text-white font-bold mb-2"></h1>
         <h2 id="ultahcondition" class="text-xl font-semibold text-white mb-4"></h2>
-        <p id="ucapanultah" class="max-w-2xl mx-auto text-sm leading-relaxed text-gray-200">
-        Lorem ipsum dolor sit amet consectetur. Tempor sollicitudin sit dolor pellentesque.
-        Scelerisque dui sed massadam elit feugiat sed semper pulvinar. Lacus mauris cras imperdiet
-        massa morbi. Amet velit mi sit consequat viverra.
+        <p id="ucapanultah" class="max-w-2xl mx-auto text-md leading-relaxed text-gray-200">
         </p>
     </section>
 
@@ -78,6 +75,8 @@
 
         let closestPerson = null;
         let closestDiff = Infinity;
+        let formattedDate = null;
+        let umurultah = null;
 
         // Dapatkan tanggal hari ini dalam format MM-DD
         const today = new Date();
@@ -92,7 +91,24 @@
 
         // Tampilkan semua daftar ultah ke dalam ultahlist
         ultahlistEl.innerHTML = ""; // Clear dulu
-        
+        function hitungUmur(birthdateStr) {
+            const today = new Date();
+            const birthDate = new Date(birthdateStr);
+
+            let umur = today.getFullYear() - birthDate.getFullYear();
+            const bulanSekarang = today.getMonth();
+            const hariSekarang = today.getDate();
+
+            const bulanLahir = birthDate.getMonth();
+            const hariLahir = birthDate.getDate();
+
+            if (bulanSekarang < bulanLahir || (bulanSekarang === bulanLahir && hariSekarang < hariLahir)) {
+                umur--; // Belum ultah tahun ini
+            }
+
+            return umur;
+        }
+
 
         ultahData.forEach(person => {
             const [year, month, day] = person.birthdate.split("-");
@@ -101,7 +117,13 @@
 
             // Hitung selisih hari dari hari ini
             const thisYear = today.getFullYear();
+            const personBorn = new Date(`${year}-${month}-${day}`);
             const personDate = new Date(`${thisYear}-${month}-${day}`);
+            const formattedBorn = personBorn.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+                });
             if (personDate < today) {
                 // Kalau sudah lewat, cek tahun depan
                 personDate.setFullYear(thisYear + 1);
@@ -109,23 +131,30 @@
 
             const diffInDays = Math.floor((personDate - today) / (1000 * 60 * 60 * 24));
 
-            if (!isToday && diffInDays < closestDiff) {
-                closestDiff = diffInDays;
-                closestPerson = person.name;
-            }
-
+            // Ini untuk menentukan orang yang paling dekat dengan hari ini
+            // diffInDays itu selalu terupdate menjadi oranng yang paling dekat
             const div = document.createElement("div");
             div.className = "flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition";
+            div.innerHTML = `
+                <span>${person.name}</span>
+                <span>${formattedBorn}</span>
+            `;
+            ultahlistEl.appendChild(div);
 
             if (isToday) {
                 div.classList.add("glowing");
+                umurultah = hitungUmur(person.birthdate);
             }
 
-            div.innerHTML = `
-                <span>${person.name}</span>
-                <span>${person.birthdate}</span>
-            `;
-            ultahlistEl.appendChild(div);
+            if (!isToday && diffInDays < closestDiff) {
+                closestDiff = diffInDays;
+                closestPerson = person.name;
+                umurultah = hitungUmur(person.birthdate);
+            }
+
+            
+
+            
         });
 
         // Kalau gak ada yang ultah hari ini, glowing orang yang paling deket ultahnya
@@ -149,9 +178,10 @@
         if (ultahHariIni.length > 0) {
             // Ambil salah satu nama yang ultah
             const orangUltah = ultahHariIni[0];
+            
 
             namaultahEl.textContent = `${orangUltah.name}'s Birthday!`;
-            ultahconditionEl.textContent = "Happy Birthday";
+            ultahconditionEl.textContent = `Selamat ulang tahun yang ke ${umurultah}!`;
             
             const div2 = document.createElement("img");
             div2.className = "absolute inset-0 -z-10 size-full object-cover object-center";
@@ -166,7 +196,7 @@
             ucapanultahEl.textContent = ucapanAcak;
         } else {
             namaultahEl.textContent = "";
-            ultahconditionEl.textContent = `Bentar lagi ultahnya "${closestPerson}" lho!`;
+            ultahconditionEl.textContent = `${closestDiff} hari lagi ultahnya "${closestPerson}" yang ke ${umurultah + 1} lho!`;
             ucapanultahEl.textContent = "";
         }
 
