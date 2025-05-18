@@ -38,7 +38,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="bg-blue-900 text-center py-12">
+    <section id="backgroundultah" class="bg-blue-900 text-center py-12 px-10">
         <h1 id="namaultah" class="text-4xl text-white font-bold mb-2"></h1>
         <h2 id="ultahcondition" class="text-xl font-semibold text-white mb-4"></h2>
         <p id="ucapanultah" class="max-w-2xl mx-auto text-sm leading-relaxed text-gray-200">
@@ -88,6 +88,7 @@
         const ultahconditionEl = document.getElementById("ultahcondition");
         const ucapanultahEl = document.getElementById("ucapanultah");
         const ultahlistEl = document.getElementById("ultahlist");
+        const backgroundultah1 = document.getElementById("backgroundultah");
 
         // Tampilkan semua daftar ultah ke dalam ultahlist
         ultahlistEl.innerHTML = ""; // Clear dulu
@@ -151,7 +152,15 @@
 
             namaultahEl.textContent = `${orangUltah.name}'s Birthday!`;
             ultahconditionEl.textContent = "Happy Birthday";
-
+            
+            const div2 = document.createElement("img");
+            div2.className = "absolute inset-0 -z-10 size-full object-cover object-center";
+            div2.src = "./images/background.png";
+            backgroundultah1.classList.remove("bg-blue-900");
+            backgroundultah1.classList.remove("py-12");
+            backgroundultah1.classList.add("py-38");
+            backgroundultah1.classList.add("sm:py-48");
+            backgroundultah1.appendChild(div2);
             // Ambil ucapan acak
             const ucapanAcak = kataData[Math.floor(Math.random() * kataData.length)];
             ucapanultahEl.textContent = ucapanAcak;
@@ -166,5 +175,4 @@
     }
 });
 </script>
-
 </html>
