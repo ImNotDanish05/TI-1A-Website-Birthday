@@ -69,11 +69,11 @@
     document.addEventListener("DOMContentLoaded", async () => {
     try {
         // Ambil data ulang tahun
-        const ultahRes = await fetch("/data/ultah.json");
+        const ultahRes = await fetch("./data/ultah.json");
         const ultahData = await ultahRes.json();
 
         // Ambil data kata ucapan
-        const kataRes = await fetch("/data/kata.json");
+        const kataRes = await fetch("./data/kata.json");
         const kataData = await kataRes.json();
 
         let closestPerson = null;
