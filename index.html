@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .glowing {
+            animation: glow 1.5s infinite alternate;
+            background-color: #fff4cc !important;
+            box-shadow: 0 0 10px #00F6FF, 0 0 20px #00F6FF, 0 0 30px #00F6FF;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px #00F6FF;
+            }
+            to {
+                box-shadow: 0 0 20px #00F6FF, 0 0 30px #00F6FF;
+            }
+        }
+    </style>
+
+    <title>Birthday</title>
+</head>
+<body>
+    <header class="flex flex-row justify-between items-center px-6 py-4 bg-gray-100 text-black">
+        <div class="flex flex-row font-bold items-center space-x-2">
+            <img src="images/profil.png" class="size-8">
+            <p>ImNotDanish05</p>
+        </div>
+        <nav class="hidden sm:block space-x-4">
+            <a href="#" class="hover:underline">Home</a>
+            <a href="#" class="hover:underline">About</a>
+            <a href="#" class="hover:underline">Resume</a>
+            <a href="#" class="hover:underline">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-blue-900 text-center py-12">
+        <h1 id="namaultah" class="text-4xl text-white font-bold mb-2"></h1>
+        <h2 id="ultahcondition" class="text-xl font-semibold text-white mb-4"></h2>
+        <p id="ucapanultah" class="max-w-2xl mx-auto text-sm leading-relaxed text-gray-200">
+        Lorem ipsum dolor sit amet consectetur. Tempor sollicitudin sit dolor pellentesque.
+        Scelerisque dui sed massadam elit feugiat sed semper pulvinar. Lacus mauris cras imperdiet
+        massa morbi. Amet velit mi sit consequat viverra.
+        </p>
+    </section>
+
+    <!-- Birthday List -->
+    <section class="bg-blue-950 py-8">
+        <h3 class="text-2xl text-white font-bold text-center mb-6">List Birthday</h3>
+        <div id="ultahlist" class="px-10 mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="hidden flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition">
+                <span>ImNotDanish05</span>
+                <span>05-03-2005</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-center text-gray-400 text-sm py-4">
+        Copyright © 2025 ImNotDanish05. All rights reserved.
+    </footer>
+    
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        // Ambil data ulang tahun
+        const ultahRes = await fetch("/data/ultah.json");
+        const ultahData = await ultahRes.json();
+
+        // Ambil data kata ucapan
+        const kataRes = await fetch("/data/kata.json");
+        const kataData = await kataRes.json();
+
+        let closestPerson = null;
+        let closestDiff = Infinity;
+
+        // Dapatkan tanggal hari ini dalam format MM-DD
+        const today = new Date();
+        const todayStr = (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                         today.getDate().toString().padStart(2, '0');
+
+        const namaultahEl = document.getElementById("namaultah");
+        const ultahconditionEl = document.getElementById("ultahcondition");
+        const ucapanultahEl = document.getElementById("ucapanultah");
+        const ultahlistEl = document.getElementById("ultahlist");
+
+        // Tampilkan semua daftar ultah ke dalam ultahlist
+        ultahlistEl.innerHTML = ""; // Clear dulu
+        
+
+        ultahData.forEach(person => {
+            const [year, month, day] = person.birthdate.split("-");
+            const mmdd = `${month}-${day}`;
+            const isToday = mmdd === todayStr;
+
+            // Hitung selisih hari dari hari ini
+            const thisYear = today.getFullYear();
+            const personDate = new Date(`${thisYear}-${month}-${day}`);
+            if (personDate < today) {
+                // Kalau sudah lewat, cek tahun depan
+                personDate.setFullYear(thisYear + 1);
+            }
+
+            const diffInDays = Math.floor((personDate - today) / (1000 * 60 * 60 * 24));
+
+            if (!isToday && diffInDays < closestDiff) {
+                closestDiff = diffInDays;
+                closestPerson = person.name;
+            }
+
+            const div = document.createElement("div");
+            div.className = "flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition";
+
+            if (isToday) {
+                div.classList.add("glowing");
+            }
+
+            div.innerHTML = `
+                <span>${person.name}</span>
+                <span>${person.birthdate}</span>
+            `;
+            ultahlistEl.appendChild(div);
+        });
+
+        // Kalau gak ada yang ultah hari ini, glowing orang yang paling deket ultahnya
+        if (closestPerson) {
+            const allItems = ultahlistEl.querySelectorAll("div");
+            allItems.forEach(item => {
+                if (item.textContent.includes(closestPerson)) {
+                    item.classList.add("glowing");
+                }
+            });
+        }
+
+
+        // Cari siapa yang ultah hari ini
+        const ultahHariIni = ultahData.filter(person => {
+            const [year, month, day] = person.birthdate.split("-");
+            const mmdd = `${month}-${day}`;
+            return mmdd === todayStr;
+        });
+
+        if (ultahHariIni.length > 0) {
+            // Ambil salah satu nama yang ultah
+            const orangUltah = ultahHariIni[0];
+
+            namaultahEl.textContent = `${orangUltah.name}'s Birthday!`;
+            ultahconditionEl.textContent = "Happy Birthday";
+
+            // Ambil ucapan acak
+            const ucapanAcak = kataData[Math.floor(Math.random() * kataData.length)];
+            ucapanultahEl.textContent = ucapanAcak;
+        } else {
+            namaultahEl.textContent = "";
+            ultahconditionEl.textContent = `Bentar lagi ultahnya "${closestPerson}" lho!`;
+            ucapanultahEl.textContent = "";
+        }
+
+    } catch (error) {
+        console.error("Gagal memuat data ulang tahun atau ucapan:", error);
+    }
+});
+</script>
+
+</html>
