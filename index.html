@@ -64,6 +64,7 @@
         let closestDiff = Infinity;
         let formattedDate = null;
         let umurultah = null;
+        let umurskr = null;
 
         // Dapatkan tanggal hari ini dalam format MM-DD
         const today = new Date();
@@ -120,10 +121,11 @@
 
             // Ini untuk menentukan orang yang paling dekat dengan hari ini
             // diffInDays itu selalu terupdate menjadi oranng yang paling dekat
+            umurskr = hitungUmur(person.birthdate);
             const div = document.createElement("div");
             div.className = "flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition";
             div.innerHTML = `
-                <span>${person.name}</span>
+                <span>${person.name} (${umurskr})</span>
                 <span>${formattedBorn}</span>
             `;
             ultahlistEl.appendChild(div);
