@@ -141,7 +141,10 @@
             if (!isToday && diffInDays < closestDiff) {
                 closestDiff = diffInDays;
                 closestPerson = person.name;
-                closestDate = formattedBorn;
+                closestDate = personBorn.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long'
+                });
                 umurultah = hitungUmur(person.birthdate);
             }
 
@@ -195,7 +198,7 @@
             countdown.id = "countdownTimer";
             countdown.className = "text-xl font-mono mt-2";
 
-            ucapanultahEl.innerHTML = `Pada ${closestDate}<br>`;
+            ucapanultahEl.innerHTML = `Pada tanggal <b>${closestDate}<br>`;
             ucapanultahEl.appendChild(countdown);
 
             const targetDate = new Date(today.getFullYear(), closestDate.includes("Januari") && today.getMonth() === 11 ? 0 : today.getMonth(), parseInt(closestDate));
