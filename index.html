@@ -174,22 +174,55 @@
             namaultahEl.textContent = `Happy Birthday ${orangUltah.name}!`;
             ultahconditionEl.textContent = `ke ${umurultah}!`;
             const div2 = document.createElement("img");
-            div2.className = "absolute inset-0 -z-10 size-full object-cover object-center";
-            div2.src = "./images/background.png";
+            div2.className = "absolute inset-0 -z-10 w-full h-full object-cover object-center";
+            div2.src = "./images/background1.png";
             backgroundultah1.classList.remove("bg-blue-900");
             backgroundultah1.classList.remove("py-12");
             backgroundultah1.classList.remove("py-38");
             backgroundultah1.classList.remove("sm:py-48");
             backgroundultah1.classList.add("py-20");
-            backgroundultah1.classList.add("sm:py-38");
+            backgroundultah1.classList.add("sm:py-48");
             backgroundultah1.appendChild(div2);
             // Ambil ucapan acak
             const ucapanAcak = kataData[Math.floor(Math.random() * kataData.length)];
             ucapanultahEl.textContent = ucapanAcak;
         } else {
-            namaultahEl.textContent = `${closestDiff} hari lagi ultahnya "${closestPerson}" yang ke ${umurultah + 1} lho!`;
-            ultahconditionEl.textContent = ``;
-            ucapanultahEl.textContent = `Pada ${closestDate}`;
+            namaultahEl.textContent = `Countdown ke ultah "${closestPerson}"`;
+            ultahconditionEl.textContent = `Ulang tahun ke-${umurultah + 1}`;
+            
+            // Tambahkan elemen countdown ke dalam ucapanultah
+            const countdown = document.createElement("div");
+            countdown.id = "countdownTimer";
+            countdown.className = "text-xl font-mono mt-2";
+
+            ucapanultahEl.innerHTML = `Pada ${closestDate}<br>`;
+            ucapanultahEl.appendChild(countdown);
+
+            const targetDate = new Date(today.getFullYear(), closestDate.includes("Januari") && today.getMonth() === 11 ? 0 : today.getMonth(), parseInt(closestDate));
+            if (targetDate < today) {
+                targetDate.setFullYear(today.getFullYear() + 1);
+            }
+
+            // Update countdown setiap detik
+            function updateCountdown() {
+                const now = new Date();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    countdown.textContent = "Selamat ulang tahun~ 🎂";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                countdown.textContent = `${days} hari ${hours} jam ${minutes} menit ${seconds} detik lagi`;
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
         }
 
     } catch (error) {
