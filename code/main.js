@@ -1,55 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="./code/main.js"></script>
-    <link rel="icon" href="./images/profil.png" type="image/png">
-    <link rel="stylesheet" href="./style/1.css">
-    <title>Birthday</title>
-</head>
-<body>
-    <header class="flex flex-row justify-between items-center px-6 py-4 bg-gray-100 text-black">
-        <div class="flex flex-row font-bold items-center space-x-2">
-            <img src="images/profil.png" class="size-8">
-            <p>ImNotDanish05</p>
-        </div>
-        <nav class="hidden sm:block space-x-4">
-            <a href="#" class="hover:underline">Home</a>
-            <a href="#" class="hover:underline">About</a>
-            <a href="#" class="hover:underline">Resume</a>
-            <a href="#" class="hover:underline">Contact</a>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="backgroundultah" class="bg-blue-900 text-center py-12 px-10">
-        <h1 id="namaultah" class="text-4xl text-white font-bold mb-4"></h1>
-        <h2 id="ultahcondition" class="text-6xl font-semibold text-white mb-4"></h2>
-        <p id="ucapanultah" class="max-w-2xl mx-auto text-md leading-relaxed text-gray-200">
-        </p>
-    </section>
-
-    <!-- Birthday List -->
-    <section class="bg-blue-950 py-8">
-        <h3 class="text-2xl text-white font-bold text-center mb-6">List Birthday</h3>
-        <div id="ultahlist" class="px-10 mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="hidden flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition">
-                <span>ImNotDanish05</span>
-                <span>05-03-2005</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-black text-center text-gray-400 text-sm py-4">
-        Copyright © 2025 ImNotDanish05. All rights reserved.
-    </footer>
-    
-</body>
-<script>
-        document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener("DOMContentLoaded", async () => {
     try {
         // Ambil data ulang tahun
         const ultahRes = await fetch("./data/ultah.json");
@@ -189,5 +138,3 @@
         console.error("Gagal memuat data ulang tahun atau ucapan:", error);
     }
 });
-</script>
-</html>
