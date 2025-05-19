@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="icon" href="./images/profil.png" type="image/png">
     <style>
         .glowing {
             animation: glow 1.5s infinite alternate;
@@ -39,8 +40,8 @@
 
     <!-- Hero Section -->
     <section id="backgroundultah" class="bg-blue-900 text-center py-12 px-10">
-        <h1 id="namaultah" class="text-4xl text-white font-bold mb-2"></h1>
-        <h2 id="ultahcondition" class="text-xl font-semibold text-white mb-4"></h2>
+        <h1 id="namaultah" class="text-4xl text-white font-bold mb-4"></h1>
+        <h2 id="ultahcondition" class="text-6xl font-semibold text-white mb-4"></h2>
         <p id="ucapanultah" class="max-w-2xl mx-auto text-md leading-relaxed text-gray-200">
         </p>
     </section>
@@ -74,6 +75,7 @@
         const kataData = await kataRes.json();
 
         let closestPerson = null;
+        let closestDate = null;
         let closestDiff = Infinity;
         let formattedDate = null;
         let umurultah = null;
@@ -149,6 +151,7 @@
             if (!isToday && diffInDays < closestDiff) {
                 closestDiff = diffInDays;
                 closestPerson = person.name;
+                closestDate = formattedBorn;
                 umurultah = hitungUmur(person.birthdate);
             }
 
@@ -178,11 +181,8 @@
         if (ultahHariIni.length > 0) {
             // Ambil salah satu nama yang ultah
             const orangUltah = ultahHariIni[0];
-            
-
-            namaultahEl.textContent = `${orangUltah.name}'s Birthday!`;
-            ultahconditionEl.textContent = `Selamat ulang tahun yang ke ${umurultah}!`;
-            
+            namaultahEl.textContent = `Happy Birthday ${orangUltah.name}!`;
+            ultahconditionEl.textContent = `ke ${umurultah}!`;
             const div2 = document.createElement("img");
             div2.className = "absolute inset-0 -z-10 size-full object-cover object-center";
             div2.src = "./images/background.png";
@@ -195,9 +195,9 @@
             const ucapanAcak = kataData[Math.floor(Math.random() * kataData.length)];
             ucapanultahEl.textContent = ucapanAcak;
         } else {
-            namaultahEl.textContent = "";
-            ultahconditionEl.textContent = `${closestDiff} hari lagi ultahnya "${closestPerson}" yang ke ${umurultah + 1} lho!`;
-            ucapanultahEl.textContent = "";
+            namaultahEl.textContent = `${closestDiff} hari lagi ultahnya "${closestPerson}" yang ke ${umurultah + 1} lho!`;
+            ultahconditionEl.textContent = ``;
+            ucapanultahEl.textContent = `Pada ${closestDate}`;
         }
 
     } catch (error) {
