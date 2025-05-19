@@ -120,10 +120,13 @@
             const diffInDays = Math.floor((personDate - today) / (1000 * 60 * 60 * 24));
 
             // Ini untuk menentukan orang yang paling dekat dengan hari ini
-            // diffInDays itu selalu terupdate menjadi oranng yang paling dekat
+            // diffInDays itu selalu terupdate menjadi oranng yang paling dekat hover:rotate-1
             umurskr = hitungUmur(person.birthdate);
             const div = document.createElement("div");
-            div.className = "flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition ease-initial";
+            div.className = "flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 transition ease-initial";
+            const randomRotate = Math.random() < 0.5 ? "hover:rotate-1" : "hover:-rotate-1";
+            div.classList.add(randomRotate);
+            
             div.innerHTML = `
                 <span>${person.name} (${umurskr})</span>
                 <span>${formattedBorn}</span>
