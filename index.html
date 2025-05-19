@@ -24,7 +24,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="backgroundultah" class="bg-blue-900 text-center py-12 px-10">
+    <section id="backgroundultah" class="items-center bg-blue-900 text-center py-12 px-10">
         <h1 id="namaultah" class="text-4xl text-white font-bold mb-4"></h1>
         <h2 id="ultahcondition" class="text-6xl font-semibold text-white mb-4"></h2>
         <p id="ucapanultah" class="max-w-2xl mx-auto text-md leading-relaxed text-gray-200">
@@ -123,7 +123,7 @@
             // diffInDays itu selalu terupdate menjadi oranng yang paling dekat
             umurskr = hitungUmur(person.birthdate);
             const div = document.createElement("div");
-            div.className = "flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition";
+            div.className = "flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition ease-initial";
             div.innerHTML = `
                 <span>${person.name} (${umurskr})</span>
                 <span>${formattedBorn}</span>
@@ -175,8 +175,10 @@
             div2.src = "./images/background.png";
             backgroundultah1.classList.remove("bg-blue-900");
             backgroundultah1.classList.remove("py-12");
-            backgroundultah1.classList.add("py-38");
-            backgroundultah1.classList.add("sm:py-48");
+            backgroundultah1.classList.remove("py-38");
+            backgroundultah1.classList.remove("sm:py-48");
+            backgroundultah1.classList.add("py-20");
+            backgroundultah1.classList.add("sm:py-38");
             backgroundultah1.appendChild(div2);
             // Ambil ucapan acak
             const ucapanAcak = kataData[Math.floor(Math.random() * kataData.length)];
