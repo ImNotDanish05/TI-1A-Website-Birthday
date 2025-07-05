@@ -6,8 +6,24 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="./code/main.js"></script>
     <link rel="icon" href="./images/profil.png" type="image/png">
-    <link rel="stylesheet" href="./style/2.css">
+    <link rel="stylesheet" href="./style/1.css">
     <title>Birthday Wish</title>
+    <style>
+        /* Custom CSS untuk efek glowing dan transisi tambahan */
+        .glowing {
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.8), 0 0 20px rgba(255, 255, 0, 0.6);
+            animation: pulse-glow 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from {
+                box-shadow: 0 0 10px rgba(255, 255, 0, 0.8), 0 0 20px rgba(255, 255, 0, 0.6);
+            }
+            to {
+                box-shadow: 0 0 15px rgba(255, 255, 0, 1), 0 0 30px rgba(255, 255, 0, 0.8);
+            }
+        }
+    </style>
 </head>
 <body class="font-sans bg-gray-900 text-gray-100">
     <header class="flex flex-row justify-between items-center px-6 py-4 bg-gray-800 text-white shadow-md">
@@ -24,7 +40,7 @@
         </nav>
         </header>
 
-    <section id="backgroundultah" class="relative flex flex-col justify-center items-center h-screen text-center px-6 py-12 overflow-hidden bg-cover bg-center" style="background-image: url('https://picsum.photos/1920/1080?random=1');">
+    <section id="backgroundultah" class="relative flex flex-col justify-center items-center h-[60vh] md:h-[70vh] text-center px-6 py-12 overflow-hidden bg-cover bg-center" style="background-image: url('https://picsum.photos/1920/1080?random=1');">
         <div class="absolute inset-0 bg-black opacity-60"></div> <div class="relative z-10 text-white">
             <h1 id="namaultah" class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg animate-fade-in-down"></h1>
             <h2 id="ultahcondition" class="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 drop-shadow-lg animate-fade-in-down delay-200"></h2>

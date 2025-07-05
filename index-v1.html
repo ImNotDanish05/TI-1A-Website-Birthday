@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="./code/main.js"></script>
+    <link rel="icon" href="./images/profil.png" type="image/png">
+    <link rel="stylesheet" href="./style/1.css">
+    <title>Birthday</title>
+</head>
+<body>
+    <header class="flex flex-row justify-between items-center px-6 py-4 bg-gray-100 text-black">
+        <div class="flex flex-row font-bold items-center space-x-2">
+            <img src="images/profil.png" class="size-8">
+            <p>ImNotDanish05</p>
+        </div>
+        <nav class="hidden sm:block space-x-4">
+            <a href="#" class="hover:underline">Home</a>
+            <a href="#" class="hover:underline">About</a>
+            <a href="#" class="hover:underline">Resume</a>
+            <a href="#" class="hover:underline">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="backgroundultah" class="items-center bg-blue-900 text-center py-12 px-10">
+        <h1 id="namaultah" class="text-4xl text-white font-bold mb-4"></h1>
+        <h2 id="ultahcondition" class="text-6xl font-semibold text-white mb-4"></h2>
+        <p id="ucapanultah" class="max-w-2xl mx-auto text-md leading-relaxed text-gray-200">
+        </p>
+    </section>
+
+    <!-- Birthday List -->
+    <section class="bg-blue-950 py-8">
+        <h3 class="text-2xl text-white font-bold text-center mb-6">List Birthday</h3>
+        <div id="ultahlist" class="px-10 mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="hidden flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 hover:rotate-1 transition">
+                <span>ImNotDanish05</span>
+                <span>05-03-2005</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-center text-gray-400 text-sm py-4">
+        Copyright © 2025 ImNotDanish05. All rights reserved.
+    </footer>
+    
+</body>
+<script>
+        document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        // Ambil data ulang tahun
+        const ultahRes = await fetch("./data/ultah.json");
+        const ultahData = await ultahRes.json();
+
+        // Ambil data kata ucapan
+        const kataRes = await fetch("./data/kata.json");
+        const kataData = await kataRes.json();
+
+        let closestPerson = null;
+        let closestDate = null;
+        let closestDiff = Infinity;
+        let formattedDate = null;
+        let umurultah = null;
+        let umurskr = null;
+
+        // Dapatkan tanggal hari ini dalam format MM-DD
+        const today = new Date();
+        const todayStr = (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                         today.getDate().toString().padStart(2, '0');
+
+        const namaultahEl = document.getElementById("namaultah");
+        const ultahconditionEl = document.getElementById("ultahcondition");
+        const ucapanultahEl = document.getElementById("ucapanultah");
+        const ultahlistEl = document.getElementById("ultahlist");
+        const backgroundultah1 = document.getElementById("backgroundultah");
+
+        // Tampilkan semua daftar ultah ke dalam ultahlist
+        ultahlistEl.innerHTML = ""; // Clear dulu
+        function hitungUmur(birthdateStr) {
+            const today = new Date();
+            const birthDate = new Date(birthdateStr);
+
+            let umur = today.getFullYear() - birthDate.getFullYear();
+            const bulanSekarang = today.getMonth();
+            const hariSekarang = today.getDate();
+
+            const bulanLahir = birthDate.getMonth();
+            const hariLahir = birthDate.getDate();
+
+            if (bulanSekarang < bulanLahir || (bulanSekarang === bulanLahir && hariSekarang < hariLahir)) {
+                umur--; // Belum ultah tahun ini
+            }
+
+            return umur;
+        }
+
+
+        ultahData.forEach(person => {
+            const [year, month, day] = person.birthdate.split("-");
+            const mmdd = `${month}-${day}`;
+            const isToday = mmdd === todayStr;
+
+            // Hitung selisih hari dari hari ini
+            const thisYear = today.getFullYear();
+            const personBorn = new Date(`${year}-${month}-${day}`);
+            const personDate = new Date(`${thisYear}-${month}-${day}`);
+            const formattedBorn = personBorn.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+                });
+            if (personDate < today) {
+                // Kalau sudah lewat, cek tahun depan
+                personDate.setFullYear(thisYear + 1);
+            }
+
+            const diffInDays = Math.floor((personDate - today) / (1000 * 60 * 60 * 24));
+
+            // Ini untuk menentukan orang yang paling dekat dengan hari ini
+            // diffInDays itu selalu terupdate menjadi oranng yang paling dekat hover:rotate-1
+            umurskr = hitungUmur(person.birthdate);
+            const div = document.createElement("div");
+            div.className = "flex justify-between bg-gray-100 text-black p-2 rounded hover:scale-110 transition ease-initial";
+            const randomRotate = Math.random() < 0.5 ? "hover:rotate-1" : "hover:-rotate-1";
+            div.classList.add(randomRotate);
+            
+            div.innerHTML = `
+                <span>${person.name} (${umurskr})</span>
+                <span>${formattedBorn}</span>
+            `;
+            ultahlistEl.appendChild(div);
+
+            if (isToday) {
+                div.classList.add("glowing");
+                umurultah = hitungUmur(person.birthdate);
+            }
+
+            if (!isToday && diffInDays < closestDiff) {
+                closestDiff = diffInDays;
+                closestPerson = person.name;
+                closestDate = personBorn.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long'
+                });
+                umurultah = hitungUmur(person.birthdate);
+            }
+
+            
+
+            
+        });
+
+        // Kalau gak ada yang ultah hari ini, glowing orang yang paling deket ultahnya
+        if (closestPerson) {
+            const allItems = ultahlistEl.querySelectorAll("div");
+            allItems.forEach(item => {
+                if (item.textContent.includes(closestPerson)) {
+                    item.classList.add("glowing");
+                }
+            });
+        }
+
+
+        // Cari siapa yang ultah hari ini
+        const ultahHariIni = ultahData.filter(person => {
+            const [year, month, day] = person.birthdate.split("-");
+            const mmdd = `${month}-${day}`;
+            return mmdd === todayStr;
+        });
+
+        if (ultahHariIni.length > 0) {
+            // Ambil salah satu nama yang ultah
+            const orangUltah = ultahHariIni[0];
+            namaultahEl.textContent = `Happy Birthday ${orangUltah.name}!`;
+            ultahconditionEl.textContent = `ke ${umurultah + 1}!`;
+            const div2 = document.createElement("img");
+            div2.className = "absolute inset-0 -z-10 w-full h-full object-cover object-center";
+            div2.src = "./images/background1.png";
+            backgroundultah1.classList.remove("bg-blue-900");
+            backgroundultah1.classList.remove("py-12");
+            backgroundultah1.classList.remove("py-38");
+            backgroundultah1.classList.remove("sm:py-48");
+            backgroundultah1.classList.add("py-20");
+            backgroundultah1.classList.add("sm:py-48");
+            backgroundultah1.appendChild(div2);
+            // Ambil ucapan acak
+            const ucapanAcak = kataData[Math.floor(Math.random() * kataData.length)];
+            ucapanultahEl.textContent = ucapanAcak;
+        } else {
+            namaultahEl.textContent = `Countdown ke ultah "${closestPerson}"`;
+            ultahconditionEl.textContent = `Ulang tahun ke-${umurultah + 1}`;
+            
+            // Tambahkan elemen countdown ke dalam ucapanultah
+            const countdown = document.createElement("div");
+            countdown.id = "countdownTimer";
+            countdown.className = "text-xl font-mono mt-2";
+
+            ucapanultahEl.innerHTML = `Pada tanggal <b>${closestDate}<br>`;
+            ucapanultahEl.appendChild(countdown);
+            const [dayStr, monthStr] = closestDate.split(' ');
+            const day = parseInt(dayStr);
+
+            // Mapping nama bulan Indonesia ke index bulan (0-based)
+            const bulanMap = {
+                "Januari":0, "Februari":1, "Maret":2, "April":3, "Mei":4, "Juni":5,
+                "Juli":6, "Agustus":7, "September":8, "Oktober":9, "November":10, "Desember":11
+            };
+            const month = bulanMap[monthStr];
+            let targetDate = new Date(today.getFullYear(), month, day);
+            // const targetDate = new Date(today.getFullYear(), closestDate.includes("Januari") && today.getMonth() === 11 ? 0 : today.getMonth(), parseInt(closestDate));
+            if (targetDate < today) {
+                targetDate.setFullYear(today.getFullYear() + 1);
+            }
+
+            // Update countdown setiap detik
+            function updateCountdown() {
+                const now = new Date();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    location.reload();
+                    return;
+                }
+                
+                const TotalMonths = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+                const months = TotalMonths % 12;
+                
+                const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const days = totalDays % 30;
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+                // countdown.textContent = `Debug: ${targetDate} | ${now} `
+                countdown.textContent = `${months} bulan ${days} hari ${hours} jam ${minutes} menit ${seconds} detik lagi`;
+            }
+
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+    } catch (error) {
+        console.error("Gagal memuat data ulang tahun atau ucapan:", error);
+    }
+});
+</script>
+</html>
