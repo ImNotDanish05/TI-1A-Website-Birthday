@@ -236,7 +236,9 @@
                     if (years > 0) countdownText += `${years} tahun `;
                     if (months > 0) countdownText += `${months} bulan `;
                     if (days > 0) countdownText += `${days} hari `;
-                    countdownText += `${hours} jam ${minutes} menit ${seconds} detik lagi`;
+                    if (hours > 0) countdownText += `${hours} jam `;
+                    if (minutes > 0) countdownText += `${minutes} menit `;
+                    countdownText += `${seconds} detik lagi`;
                     
                     countdown.textContent = countdownText;
                 }
